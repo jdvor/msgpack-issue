@@ -11,14 +11,18 @@
         public static void Main()
         {
             var opts = Options1();
-            foreach (var obj in Data.Tests())
-            {
-                Serialize(obj, opts);
-            }
+
+            ////foreach (var obj in Data.Tests())
+            ////{
+            ////    Serialize(obj, opts);
+            ////}
 
             var ef = new EventFactory(Array.Empty<Type>());
-            var proxy = (IInitializeNewCustomer)ef.Create(typeof(IInitializeNewCustomer));
-            Console.WriteLine(proxy.GetType().FullName);
+            var proxy = (IInitializeNewCustomer) ef.Create(typeof(IInitializeNewCustomer));
+            proxy.Email = "john.doe@example.com";
+            proxy.Age = 43;
+            proxy.PreferredLanguage = "en";
+
             Serialize(proxy, opts);
         }
 
@@ -30,7 +34,7 @@
                 NativeDecimalResolver.Instance,
                 NativeDateTimeResolver.Instance,
                 StandardResolver.Instance,
-                CustomResolver.Instance,
+                NotFoundResolver.Instance,
             };
             return MessagePackSerializerOptions.Standard
                 .WithResolver(CompositeResolver.Create(resolvers))
